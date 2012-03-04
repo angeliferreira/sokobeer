@@ -20,13 +20,59 @@ public class GameView extends SurfaceView {
 	private float newX;
 	private float oldY;
 	private float newY;
+//	private int screenHeight;
+//	private int screenWidth;
 	 
     public GameView(Context context) {
           super(context);
-          this.sokobao = new Sokobao2000(); 
-          this.setOnTouchListener(listener);
+          setSokobao(new Sokobao2000()); 
+          setOnTouchListener(listener);
           setHolder(getHolder());
+          addCallback();
     }
+
+	private void addCallback() {
+		holder.addCallback(new SurfaceHolder.Callback() {
+			@Override
+			public void surfaceCreated(SurfaceHolder holder) {
+				updateOnDrawCanvas(holder);
+			}
+			
+			@Override
+			public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) { }
+			
+			@Override
+			public void surfaceDestroyed(SurfaceHolder arg0) { }
+		});
+	}
+    
+    public void setHolder(SurfaceHolder holder) {
+    	this.holder = holder;
+    }
+    
+//	public int getScreenHeight() {
+//		return screenHeight;
+//	}
+//
+//	public void setScreenHeight(int screenHeight) {
+//		this.screenHeight = screenHeight;
+//	}
+//
+//	public int getScreenWidth() {
+//		return screenWidth;
+//	}
+//
+//	public void setScreenWidth(int screenWidth) {
+//		this.screenWidth = screenWidth;
+//	}
+	
+	public Sokobao2000 getSokobao() {
+		return sokobao;
+	}
+
+	public void setSokobao(Sokobao2000 sokobao) {
+		this.sokobao = sokobao;
+	}
     
     @Override
     protected void onDraw(Canvas canvas) {
@@ -47,7 +93,7 @@ public class GameView extends SurfaceView {
     
     private Bitmap[][] getBitmapScreen() {
     	
-    	Grid grid = sokobao.getGrid();
+    	Grid grid = getSokobao().getGrid();
     	Bitmap[][] bitmapGrid = new Bitmap[10][10];  
     	
     	for (int y = 0; y < 10; y++) {
@@ -66,15 +112,11 @@ public class GameView extends SurfaceView {
 		if (singleName == 'X') return BitmapFactory.decodeResource(getResources(), R.drawable.target);
 		return BitmapFactory.decodeResource(getResources(), R.drawable.empty);
 	}
-	
-	public void setHolder(SurfaceHolder holder) {
-		this.holder = holder;
-	}
 
 	private void updateOnDrawCanvas(SurfaceHolder holder) {
-		Canvas canvas = holder.lockCanvas(null);
+		Canvas canvas = holder.lockCanvas();
 		onDraw(canvas);
-		getHolder().unlockCanvasAndPost(canvas);
+		holder.unlockCanvasAndPost(canvas);
 	}
 
 	private OnTouchListener listener = new OnTouchListener() {
@@ -97,19 +139,15 @@ public class GameView extends SurfaceView {
 					
 					if (Math.abs(dx) > Math.abs(dy)) {
 						if (dx > 0) {
-							//Log.i("lemao", "RIGHT - "+dx);
-							sokobao.moveHeroEast();
+							getSokobao().moveHeroEast();
 						} else {
-							//Log.i("lemao", "LEFT - "+dx);
-							sokobao.moveHeroWest();
+							getSokobao().moveHeroWest();
 						}
 					} else {
 						if (dy > 0) {
-							//Log.i("lemao", "DOWN - "+dy);
-							sokobao.moveHeroSouth();						
+							getSokobao().moveHeroSouth();						
 						} else {
-							//Log.i("lemao", "UP - "+dy); 
-							sokobao.moveHeroNorth();
+							getSokobao().moveHeroNorth();
 						}
 					}
 					
