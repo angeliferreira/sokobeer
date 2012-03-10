@@ -20,8 +20,14 @@ public class GameView extends SurfaceView {
 	private float newX;
 	private float oldY;
 	private float newY;
-//	private int screenHeight;
-//	private int screenWidth;
+	private Bitmap heroBitmap;
+	private Bitmap targetBitmap;
+	private Bitmap blockBitmap;
+	private Bitmap wallBitmap;
+	private Bitmap emptyBitmap;
+	private int screenHeight;
+	private int screenWidth;
+	private int increment;
 	 
     public GameView(Context context) {
           super(context);
@@ -31,10 +37,26 @@ public class GameView extends SurfaceView {
           addCallback();
     }
 
+	private int getCanvasWidth() {
+		Canvas canvas = holder.lockCanvas();
+		int width = canvas.getWidth();
+		holder.unlockCanvasAndPost(canvas);
+		return width;
+	}
+
+	private int getCanvasHeight() {
+		Canvas canvas = holder.lockCanvas();
+		int height = canvas.getHeight();
+		holder.unlockCanvasAndPost(canvas);
+		return height;
+	}
+
 	private void addCallback() {
 		holder.addCallback(new SurfaceHolder.Callback() {
 			@Override
 			public void surfaceCreated(SurfaceHolder holder) {
+				setScreenHeight(getCanvasHeight());
+				setScreenWidth(getCanvasWidth());
 				updateOnDrawCanvas(holder);
 			}
 			
@@ -50,21 +72,21 @@ public class GameView extends SurfaceView {
     	this.holder = holder;
     }
     
-//	public int getScreenHeight() {
-//		return screenHeight;
-//	}
-//
-//	public void setScreenHeight(int screenHeight) {
-//		this.screenHeight = screenHeight;
-//	}
-//
-//	public int getScreenWidth() {
-//		return screenWidth;
-//	}
-//
-//	public void setScreenWidth(int screenWidth) {
-//		this.screenWidth = screenWidth;
-//	}
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+
+	public void setScreenHeight(int screenHeight) {
+		this.screenHeight = screenHeight;
+	}
+
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+
+	public void setScreenWidth(int screenWidth) {
+		this.screenWidth = screenWidth;
+	}
 	
 	public Sokobao2000 getSokobao() {
 		return sokobao;
@@ -73,21 +95,28 @@ public class GameView extends SurfaceView {
 	public void setSokobao(Sokobao2000 sokobao) {
 		this.sokobao = sokobao;
 	}
-    
+	
+	public int getIncrement() {
+		if (increment == 0) {
+			increment = getScreenWidth() / 10; 
+		}
+		return increment;
+	}
+
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(Color.BLACK);
         
         Bitmap[][] bitmapScreen = getBitmapScreen();
-		int j = 20;
         
+        int j = 0;
         for (int x = 0; x < 10; x++) {
-        	int i = 20;
+        	int i = 0;
 			for (int y = 0; y < 10; y++) {
 				canvas.drawBitmap(bitmapScreen[y][x], i, j, null);
-				i += 20;
+				i += getIncrement();
 			}
-			j += 20;
+			j += getIncrement();
 		}
      }
     
@@ -106,13 +135,53 @@ public class GameView extends SurfaceView {
     }
     
 	private Bitmap getBitmap(char singleName) {
-		if (singleName == 'H') return BitmapFactory.decodeResource(getResources(), R.drawable.beer_girl1);
-		if (singleName == 'W') return BitmapFactory.decodeResource(getResources(), R.drawable.wall);
-		if (singleName == 'B') return BitmapFactory.decodeResource(getResources(), R.drawable.beer);
-		if (singleName == 'X') return BitmapFactory.decodeResource(getResources(), R.drawable.target);
-		return BitmapFactory.decodeResource(getResources(), R.drawable.empty);
+		if (singleName == 'H') return getHeroBitmap();
+		if (singleName == 'W') return getWallBitmap();
+		if (singleName == 'B') return getBlockBitmap();
+		if (singleName == 'X') return getTargetBitmap();
+		return getEmptyBitmap();
 	}
 
+	private Bitmap getEmptyBitmap() {
+		if (emptyBitmap == null) {
+			emptyBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.empty));
+		}
+		return emptyBitmap;
+	}
+
+	private Bitmap getTargetBitmap() {
+		if (targetBitmap == null) {
+			targetBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.target));
+		}
+		return targetBitmap;
+	}
+
+	private Bitmap getBlockBitmap() {
+		if (blockBitmap == null) {
+			blockBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.beer));
+		}
+		return blockBitmap;
+	}
+
+	private Bitmap getWallBitmap() {
+		if (wallBitmap == null) {
+			wallBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.wall));
+		}
+		return wallBitmap;
+	}
+
+	private Bitmap getHeroBitmap() {
+		if (heroBitmap == null) {
+			heroBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.beer_girl1));
+		}
+		return heroBitmap;
+	}
+
+	private Bitmap resizeBitmap(Bitmap bitmap) {
+		System.out.println(getIncrement());
+		return Bitmap.createScaledBitmap(bitmap, getIncrement(), getIncrement(), true);
+	}
+	
 	private void updateOnDrawCanvas(SurfaceHolder holder) {
 		Canvas canvas = holder.lockCanvas();
 		onDraw(canvas);
@@ -156,7 +225,5 @@ public class GameView extends SurfaceView {
 			return true;
 		}
 	};
-	
-	
-	
+		
 }
