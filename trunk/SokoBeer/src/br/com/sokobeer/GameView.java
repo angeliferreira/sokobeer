@@ -151,7 +151,7 @@ public class GameView extends SurfaceView {
 
 	private Bitmap getTargetBitmap() {
 		if (targetBitmap == null) {
-			targetBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.target));
+			targetBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.barrel));
 		}
 		return targetBitmap;
 	}
@@ -172,7 +172,7 @@ public class GameView extends SurfaceView {
 
 	private Bitmap getHeroBitmap() {
 		if (heroBitmap == null) {
-			heroBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.beer_girl1));
+			heroBitmap = resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.hero));
 		}
 		return heroBitmap;
 	}
