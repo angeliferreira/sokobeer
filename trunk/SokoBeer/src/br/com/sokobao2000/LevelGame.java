@@ -1,4 +1,4 @@
-package main;
+package br.com.sokobao2000;
 
 import java.util.ArrayList;
 import java.util.List;

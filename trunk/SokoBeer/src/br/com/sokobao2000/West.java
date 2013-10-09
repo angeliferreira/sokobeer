@@ -1,6 +1,7 @@
-package main.directions;
+package br.com.sokobao2000;
 
 import android.graphics.Point;
+
 
 public class West implements Direction {
 
@@ -9,9 +10,9 @@ public class West implements Direction {
 	private West() { }
 
 	public static West getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new West();
-		}
+
 		return instance;
 	}
 	
