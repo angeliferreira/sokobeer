@@ -1,6 +1,7 @@
-package main.directions;
+package br.com.sokobao2000;
 
 import android.graphics.Point;
+
 
 public class North implements Direction {
 
@@ -9,9 +10,9 @@ public class North implements Direction {
 	private North() { }
 
 	public static North getInstance() {
-		if (instance == null) {
+		if (instance == null)
 			instance = new North();
-		}
+
 		return instance;
 	}
 	
